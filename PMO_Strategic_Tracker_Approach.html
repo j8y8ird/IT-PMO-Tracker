@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>IT PMO Strategic Initiative Tracker — Design Approach</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+  :root {
+    --navy:   #102E41;
+    --g1:     #083F0A;
+    --g2:     #00A854;
+    --g3:     #72EDBB;
+    --blue:   #64BEE6;
+    --gray:   #F0EEEC;
+    --white:  #FFFFFF;
+    --mid:    #D6DFE5;
+    --ink:    #1A2F3C;
+    --muted:  #5C7282;
+    --border: #C9D8E0;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', Verdana, Arial, sans-serif;
+    background: var(--gray);
+    color: var(--ink);
+    font-size: 13.5px;
+    line-height: 1.55;
+  }
+
+  /* PAGE WRAPPER */
+  .page {
+    max-width: 1060px;
+    margin: 32px auto;
+    background: var(--white);
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: 0 4px 28px rgba(16,46,65,0.12);
+  }
+
+  /* ── HEADER ── */
+  .header {
+    background: var(--navy);
+    color: var(--white);
+    padding: 36px 48px 32px;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::after {
+    content: '';
+    position: absolute;
+    right: -60px; top: -60px;
+    width: 280px; height: 280px;
+    border-radius: 50%;
+    background: rgba(100,190,230,0.1);
+    pointer-events: none;
+  }
+  .header-eyebrow {
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--g3);
+    margin-bottom: 10px;
+  }
+  .header h1 {
+    font-family: 'DM Serif Display', Georgia, serif;
+    font-size: 28px;
+    font-weight: 400;
+    line-height: 1.2;
+    margin-bottom: 10px;
+    max-width: 620px;
+  }
+  .header-sub {
+    font-size: 12.5px;
+    color: var(--blue);
+    font-weight: 400;
+    max-width: 580px;
+  }
+  .header-meta {
+    margin-top: 18px;
+    display: flex;
+    gap: 28px;
+    flex-wrap: wrap;
+  }
+  .header-meta span {
+    font-size: 11px;
+    color: rgba(255,255,255,0.6);
+    letter-spacing: 0.5px;
+  }
+  .header-meta strong {
+    color: var(--g3);
+    font-weight: 600;
+  }
+
+  /* ── BODY LAYOUT ── */
+  .body { padding: 40px 48px; }
+
+  /* ── SECTION LABELS ── */
+  .section { margin-bottom: 40px; }
+  .section-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--g2);
+    border-left: 3px solid var(--g2);
+    padding-left: 10px;
+    margin-bottom: 16px;
+  }
+  .section h2 {
+    font-family: 'DM Serif Display', Georgia, serif;
+    font-size: 19px;
+    font-weight: 400;
+    color: var(--navy);
+    margin-bottom: 10px;
+  }
+  .section p {
+    color: var(--muted);
+    font-size: 13px;
+    max-width: 780px;
+    line-height: 1.6;
+  }
+
+  /* ── PURPOSE GRID ── */
+  .purpose-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-top: 20px;
+  }
+  .purpose-card {
+    background: var(--gray);
+    border-radius: 5px;
+    padding: 18px 20px;
+    border-top: 3px solid var(--navy);
+  }
+  .purpose-card .icon {
+    font-size: 18px;
+    margin-bottom: 8px;
+  }
+  .purpose-card strong {
+    display: block;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--navy);
+    margin-bottom: 5px;
+  }
+  .purpose-card p {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  /* ── WORKFLOW STATES ── */
+  .workflow-row {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    margin-top: 20px;
+    border-radius: 5px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+  .workflow-stage {
+    flex: 1;
+    padding: 18px 16px;
+    border-right: 1px solid var(--border);
+    position: relative;
+  }
+  .workflow-stage:last-child { border-right: none; }
+  .workflow-stage::after {
+    content: '→';
+    position: absolute;
+    right: -11px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 16px;
+    color: var(--border);
+    z-index: 2;
+    background: var(--white);
+  }
+  .workflow-stage:last-child::after { display: none; }
+  .ws-badge {
+    display: inline-block;
+    font-size: 9.5px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    border-radius: 3px;
+    padding: 3px 8px;
+    margin-bottom: 8px;
+  }
+  .ws-not-started .ws-badge  { background: #EEF0F2; color: #7A8FA0; }
+  .ws-alignment .ws-badge    { background: #E3F4FD; color: #1A7AAF; }
+  .ws-in-progress .ws-badge  { background: #FFF4D6; color: #8C6A00; }
+  .ws-complete .ws-badge     { background: #E6F9EF; color: #0A6630; }
+  .workflow-stage p {
+    font-size: 11.5px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  /* ── FIELD SCHEMA TABLE ── */
+  .schema-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 18px;
+    font-size: 12.5px;
+  }
+  .schema-table thead tr {
+    background: var(--navy);
+    color: var(--white);
+  }
+  .schema-table thead th {
+    padding: 10px 14px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 11px;
+    letter-spacing: 0.5px;
+  }
+  .schema-table tbody tr:nth-child(even) { background: var(--gray); }
+  .schema-table tbody tr:nth-child(odd)  { background: var(--white); }
+  .schema-table td {
+    padding: 9px 14px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  .schema-table td:first-child { font-weight: 600; color: var(--navy); }
+  .schema-table td:nth-child(2) { color: var(--muted); }
+  .req-tag {
+    font-size: 9.5px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 2px 6px;
+    border-radius: 2px;
+  }
+  .req-required  { background: #E6F9EF; color: #0A6630; }
+  .req-optional  { background: #EEF0F2; color: #7A8FA0; }
+
+  /* ── PROGRESS PILLS ── */
+  .progress-row {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+  }
+  .prog-pill {
+    flex: 1;
+    min-width: 150px;
+    border-radius: 5px;
+    padding: 14px 16px;
+    border: 1px solid var(--border);
+    text-align: center;
+  }
+  .prog-bar-outer {
+    height: 6px;
+    background: var(--border);
+    border-radius: 3px;
+    margin: 8px 0 6px;
+    overflow: hidden;
+  }
+  .prog-bar-inner { height: 100%; border-radius: 3px; }
+  .prog-label   { font-size: 11.5px; font-weight: 600; color: var(--navy); }
+  .prog-desc    { font-size: 10.5px; color: var(--muted); }
+  .p0  .prog-bar-inner { width: 0%;    background: var(--border); }
+  .p25 .prog-bar-inner { width: 25%;   background: #64BEE6; }
+  .p50 .prog-bar-inner { width: 50%;   background: #F0A500; }
+  .p75 .prog-bar-inner { width: 75%;   background: var(--g2); }
+  .p100 .prog-bar-inner { width: 100%; background: #0A6630; }
+
+  /* ── SAMPLE BOARD ── */
+  .board-note {
+    font-size: 11.5px;
+    color: var(--muted);
+    font-style: italic;
+    margin-bottom: 14px;
+  }
+  .board-cols {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-top: 4px;
+  }
+  .board-col-header {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 8px 12px;
+    border-radius: 4px 4px 0 0;
+    margin-bottom: 0;
+  }
+  .bcol-ns  .board-col-header { background: #EEF0F2; color: #7A8FA0; }
+  .bcol-al  .board-col-header { background: #E3F4FD; color: #1A7AAF; }
+  .bcol-ip  .board-col-header { background: #FFF4D6; color: #8C6A00; }
+  .bcol-dn  .board-col-header { background: #E6F9EF; color: #0A6630; }
+
+  .board-col-body {
+    background: var(--gray);
+    border-radius: 0 0 4px 4px;
+    padding: 8px;
+    min-height: 160px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .init-card {
+    background: var(--white);
+    border-radius: 4px;
+    padding: 10px 12px;
+    border-left: 3px solid var(--border);
+    box-shadow: 0 1px 4px rgba(16,46,65,0.07);
+  }
+  .init-card.green  { border-left-color: var(--g2); }
+  .init-card.yellow { border-left-color: #F0A500; }
+  .init-card.red    { border-left-color: #D94F3A; }
+  .init-card.done   { border-left-color: #0A6630; }
+
+  .card-title {
+    font-size: 11.5px;
+    font-weight: 600;
+    color: var(--navy);
+    line-height: 1.35;
+    margin-bottom: 5px;
+  }
+  .card-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+  .card-owner {
+    font-size: 10px;
+    color: var(--muted);
+  }
+  .card-status-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+  .dot-green  { background: var(--g2); }
+  .dot-yellow { background: #F0A500; }
+  .dot-red    { background: #D94F3A; }
+  .dot-done   { background: #0A6630; }
+  .dot-ns     { background: var(--border); }
+
+  /* ── GOVERNANCE ── */
+  .cadence-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    margin-top: 20px;
+  }
+  .cadence-card {
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    padding: 16px 18px;
+  }
+  .cadence-card .freq {
+    font-size: 9.5px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--blue);
+    margin-bottom: 6px;
+  }
+  .cadence-card strong {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--navy);
+    margin-bottom: 5px;
+  }
+  .cadence-card p {
+    font-size: 11.5px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  /* ── PRINCIPLES ── */
+  .principles-list {
+    margin-top: 16px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .principle-item {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    padding: 12px 14px;
+    background: var(--gray);
+    border-radius: 4px;
+  }
+  .principle-icon {
+    font-size: 16px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .principle-text strong {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--navy);
+    margin-bottom: 2px;
+  }
+  .principle-text p {
+    font-size: 11.5px;
+    color: var(--muted);
+    line-height: 1.45;
+  }
+
+  /* ── DIVIDER ── */
+  .divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 36px 0;
+  }
+
+  /* ── FOOTER ── */
+  .footer {
+    background: var(--navy);
+    padding: 18px 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .footer p {
+    font-size: 11px;
+    color: rgba(255,255,255,0.45);
+  }
+  .footer strong {
+    color: var(--g3);
+  }
+
+  @media print {
+    body { background: white; }
+    .page { box-shadow: none; margin: 0; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-eyebrow">IT Program Management Office &nbsp;|&nbsp; Strategic Tracking</div>
+    <h1>PMO Strategic Initiative Tracker<br>Design Approach</h1>
+    <p class="header-sub">
+      A lightweight, leadership-facing framework for tracking high-level PMO strategic outcomes —
+      intent, alignment, plan, and directional progress — without duplicating team-level execution tracking.
+    </p>
+    <div class="header-meta">
+      <span><strong>Audience:</strong> IT Leadership, PMO Leadership</span>
+      <span><strong>Scope:</strong> Strategic Initiatives &amp; PMO Outcomes</span>
+      <span><strong>Tool Reference:</strong> Trello-style Kanban (Strategic)</span>
+      <span><strong>Version:</strong> 2026 — Q2 Baseline</span>
+    </div>
+  </div>
+
+  <!-- BODY -->
+  <div class="body">
+
+    <!-- PURPOSE -->
+    <div class="section">
+      <div class="section-label">Purpose &amp; Scope</div>
+      <h2>What This Tracker Is — and Is Not</h2>
+      <p>
+        The PMO Strategic Initiative Tracker provides IT leadership with a single view of major PMO outcomes:
+        where initiatives stand strategically, who owns them, and whether they are on a credible path to completion.
+        It does not replace team-level Jira boards, sprint tracking, or execution metrics.
+        Teams continue using their own delivery tools. This tracker sits one level above — capturing strategic intent and directional progress only.
+      </p>
+      <div class="purpose-grid">
+        <div class="purpose-card">
+          <div class="icon">🎯</div>
+          <strong>Strategic Alignment</strong>
+          <p>Links each initiative to a clear PMO objective and OKR theme, so leadership can see how delivery connects to organizational priorities.</p>
+        </div>
+        <div class="purpose-card">
+          <div class="icon">📍</div>
+          <strong>Directional Visibility</strong>
+          <p>Answers "Where does this stand?" with coarse-grained signals — not story points, burndown, or sprint velocity. Leaders see intent and momentum.</p>
+        </div>
+        <div class="purpose-card">
+          <div class="icon">🔒</div>
+          <strong>Non-Invasive by Design</strong>
+          <p>Nothing on this board duplicates or interferes with team execution tracking. This is a read-up artifact, not a management-down tool.</p>
+        </div>
+      </div>
+    </div>
+
+    <hr class="divider" />
+
+    <!-- WORKFLOW STATES -->
+    <div class="section">
+      <div class="section-label">Workflow Design</div>
+      <h2>Four Lightweight States</h2>
+      <p>
+        Initiatives move through four stages. Minimal states reduce maintenance overhead and keep the board usable at leadership review cadence,
+        not sprint cadence.
+      </p>
+      <div class="workflow-row">
+        <div class="workflow-stage ws-not-started">
+          <span class="ws-badge">Not Started</span>
+          <p>Initiative is approved or planned but active work has not begun. Owner confirmed; timeline visible on roadmap.</p>
+        </div>
+        <div class="workflow-stage ws-alignment">
+          <span class="ws-badge">In Alignment</span>
+          <p>Pre-work underway: stakeholder alignment, approach confirmation, or resource identification. Intent is set; execution is not yet active.</p>
+        </div>
+        <div class="workflow-stage ws-in-progress">
+          <span class="ws-badge">In Progress</span>
+          <p>Active work is underway. Progress is directionally tracked. Key milestones and blockers are surfaced at governance cadence.</p>
+        </div>
+        <div class="workflow-stage ws-complete">
+          <span class="ws-badge">Complete</span>
+          <p>Stated objective has been achieved. Outcome is documented and any ongoing operational handoff is confirmed.</p>
+        </div>
+      </div>
+    </div>
+
+    <hr class="divider" />
+
+    <!-- FIELD SCHEMA -->
+    <div class="section">
+      <div class="section-label">Field Schema</div>
+      <h2>What Each Initiative Card Captures</h2>
+      <p>
+        Fields are limited to what leadership needs to assess strategic health. All fields are manually maintained
+        by the initiative owner; no system integrations required.
+      </p>
+      <table class="schema-table">
+        <thead>
+          <tr>
+            <th style="width:18%">Field</th>
+            <th style="width:36%">Description</th>
+            <th style="width:22%">Values / Format</th>
+            <th style="width:14%">Required</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Initiative Title</td>
+            <td>Plain-language name of the PMO strategic outcome (not a project or epic title)</td>
+            <td>Short noun phrase, max 8 words</td>
+            <td><span class="req-tag req-required">Required</span></td>
+          </tr>
+          <tr>
+            <td>Strategic Theme</td>
+            <td>Alignment to PMO or IT portfolio theme (e.g., PMF Adoption, Governance, Delivery Visibility, Agile Foundation)</td>
+            <td>Pick-list — 5–7 themes max</td>
+            <td><span class="req-tag req-required">Required</span></td>
+          </tr>
+          <tr>
+            <td>Objective</td>
+            <td>One-sentence description of what this initiative is trying to achieve at a strategic level</td>
+            <td>Free text, 1 sentence</td>
+            <td><span class="req-tag req-required">Required</span></td>
+          </tr>
+          <tr>
+            <td>Owner</td>
+            <td>Single named individual accountable for the outcome. Not a team name.</td>
+            <td>First + Last or role title</td>
+            <td><span class="req-tag req-required">Required</span></td>
+          </tr>
+          <tr>
+            <td>Target Quarter</td>
+            <td>Quarter by which the stated objective is expected to be complete</td>
+            <td>Q1 / Q2 / Q3 / Q4 / Ongoing</td>
+            <td><span class="req-tag req-required">Required</span></td>
+          </tr>
+          <tr>
+            <td>Overall Status</td>
+            <td>RAG indicator for leadership confidence in the initiative's current trajectory</td>
+            <td>🟢 On Track &nbsp;|&nbsp; 🟡 At Risk &nbsp;|&nbsp; 🔴 Off Track</td>
+            <td><span class="req-tag req-required">Required</span></td>
+          </tr>
+          <tr>
+            <td>Directional Progress</td>
+            <td>Coarse-grained signal of how far along the initiative is — no percentages, no story points</td>
+            <td>Just Started · Mid-Progress · Near Complete · Done</td>
+            <td><span class="req-tag req-required">Required</span></td>
+          </tr>
+          <tr>
+            <td>Next Decision / Milestone</td>
+            <td>The single most important upcoming moment that requires leadership awareness or action</td>
+            <td>Short phrase + target date</td>
+            <td><span class="req-tag req-optional">Optional</span></td>
+          </tr>
+          <tr>
+            <td>Key Dependency or Risk</td>
+            <td>Highest-priority blocker or external dependency that could derail the initiative</td>
+            <td>Free text, 1–2 sentences</td>
+            <td><span class="req-tag req-optional">Optional</span></td>
+          </tr>
+          <tr>
+            <td>Status Summary</td>
+            <td>2–3 sentence narrative on current state; updated at biweekly cadence. Replaces free-form status emails.</td>
+            <td>Plain text, dated (e.g., 5/13: …)</td>
+            <td><span class="req-tag req-optional">Optional</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <hr class="divider" />
+
+    <!-- PROGRESS MODEL -->
+    <div class="section">
+      <div class="section-label">Progress Representation</div>
+      <h2>Directional Progress — No False Precision</h2>
+      <p>
+        Progress is represented using four plain-language signals tied to broad effort milestones, not formula-derived percentages.
+        This avoids manufactured precision and keeps the board honest. When an initiative warrants a more specific milestone view,
+        that detail lives in the initiative's status summary — not in the tracker field itself.
+      </p>
+      <div class="progress-row">
+        <div class="prog-pill p0">
+          <div class="prog-bar-outer"><div class="prog-bar-inner"></div></div>
+          <div class="prog-label">Just Started</div>
+          <div class="prog-desc">Kickoff or early alignment underway. Direction confirmed; material output not yet produced.</div>
+        </div>
+        <div class="prog-pill p25">
+          <div class="prog-bar-outer"><div class="prog-bar-inner"></div></div>
+          <div class="prog-label">Mid-Progress</div>
+          <div class="prog-desc">Core work is active. Key artifacts or decisions are in flight but not yet finalized.</div>
+        </div>
+        <div class="prog-pill p75">
+          <div class="prog-bar-outer"><div class="prog-bar-inner"></div></div>
+          <div class="prog-label">Near Complete</div>
+          <div class="prog-desc">Primary deliverable or outcome is drafted; finalization, review, or rollout steps remain.</div>
+        </div>
+        <div class="prog-pill p100">
+          <div class="prog-bar-outer"><div class="prog-bar-inner"></div></div>
+          <div class="prog-label">Done</div>
+          <div class="prog-desc">Stated objective achieved. Outcome documented; card moves to Complete state.</div>
+        </div>
+      </div>
+    </div>
+
+    <hr class="divider" />
+
+    <!-- SAMPLE BOARD -->
+    <div class="section">
+      <div class="section-label">Illustrative Board View</div>
+      <h2>PMO Strategic Initiatives — Sample Layout</h2>
+      <p class="board-note">Sample cards drawn from 2026 IT OKR One-View. Titles and owners are representative; status reflects approximate state as of Q2 2026.</p>
+      <div class="board-cols">
+        <!-- NOT STARTED -->
+        <div class="bcol-ns">
+          <div class="board-col-header">Not Started</div>
+          <div class="board-col-body">
+            <div class="init-card">
+              <div class="card-title">PMO Capacity Planning (Rolling 8-Week Forecast)</div>
+              <div class="card-meta">
+                <span class="card-owner">Owner: Katie</span>
+                <span class="card-status-dot dot-ns"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- IN ALIGNMENT -->
+        <div class="bcol-al">
+          <div class="board-col-header">In Alignment</div>
+          <div class="board-col-body">
+            <div class="init-card yellow">
+              <div class="card-title">PI Planning Readiness — Definition of Ready (DoR)</div>
+              <div class="card-meta">
+                <span class="card-owner">Owner: Diwakar</span>
+                <span class="card-status-dot dot-yellow"></span>
+              </div>
+            </div>
+            <div class="init-card green">
+              <div class="card-title">Role-Based Onboarding — PM / PPM / ADL</div>
+              <div class="card-meta">
+                <span class="card-owner">Owner: Trent</span>
+                <span class="card-status-dot dot-green"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- IN PROGRESS -->
+        <div class="bcol-ip">
+          <div class="board-col-header">In Progress</div>
+          <div class="board-col-body">
+            <div class="init-card green">
+              <div class="card-title">PMF Institutionalization Across IT Initiatives</div>
+              <div class="card-meta">
+                <span class="card-owner">Owner: Katie</span>
+                <span class="card-status-dot dot-green"></span>
+              </div>
+            </div>
+            <div class="init-card green">
+              <div class="card-title">Project Governance Activation — Repeatable Cadence</div>
+              <div class="card-meta">
+                <span class="card-owner">Owner: Diwakar</span>
+                <span class="card-status-dot dot-green"></span>
+              </div>
+            </div>
+            <div class="init-card yellow">
+              <div class="card-title">Portfolio Risk Management — Centralized View</div>
+              <div class="card-meta">
+                <span class="card-owner">Owner: Katie</span>
+                <span class="card-status-dot dot-yellow"></span>
+              </div>
+            </div>
+            <div class="init-card yellow">
+              <div class="card-title">PMO Artifact &amp; Template Standardization</div>
+              <div class="card-meta">
+                <span class="card-owner">Owner: Katie</span>
+                <span class="card-status-dot dot-yellow"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- COMPLETE -->
+        <div class="bcol-dn">
+          <div class="board-col-header">Complete</div>
+          <div class="board-col-body">
+            <div class="init-card done">
+              <div class="card-title">ERP / Kanban Delivery Model Design &amp; Launch</div>
+              <div class="card-meta">
+                <span class="card-owner">Owner: Jessica S.</span>
+                <span class="card-status-dot dot-done"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <hr class="divider" />
+
+    <!-- GOVERNANCE CADENCE -->
+    <div class="section">
+      <div class="section-label">Governance Cadence</div>
+      <h2>When and How the Board Is Maintained</h2>
+      <p>
+        The tracker is a living artifact — not a project plan. It is updated and reviewed on a predictable cadence
+        tied to existing IT leadership rhythms, not created as a standalone meeting series.
+      </p>
+      <div class="cadence-grid">
+        <div class="cadence-card">
+          <div class="freq">Biweekly</div>
+          <strong>Owner Updates</strong>
+          <p>Each initiative owner reviews their card and updates status, directional progress, and next milestone. Updates take under 5 minutes per card.</p>
+        </div>
+        <div class="cadence-card">
+          <div class="freq">Monthly</div>
+          <strong>Portfolio Review Touchpoint</strong>
+          <p>PMO Leadership reviews the full board at the monthly Portfolio Review. Flagged items (🟡/🔴) are prioritized for discussion. No read-aloud of green items.</p>
+        </div>
+        <div class="cadence-card">
+          <div class="freq">Quarterly</div>
+          <strong>Board Refresh + Archiving</strong>
+          <p>At PI Planning / quarter close: completed initiatives are archived, new initiatives are added, and strategic themes are reviewed against current OKRs.</p>
+        </div>
+      </div>
+    </div>
+
+    <hr class="divider" />
+
+    <!-- DESIGN PRINCIPLES -->
+    <div class="section">
+      <div class="section-label">Design Principles</div>
+      <h2>What Makes This Tracker Work</h2>
+      <div class="principles-list">
+        <div class="principle-item">
+          <div class="principle-icon">✂️</div>
+          <div class="principle-text">
+            <strong>One card per strategic outcome — not per project</strong>
+            <p>Each card represents a leadership-level intent, not a delivery workstream. Multiple projects may support a single strategic outcome.</p>
+          </div>
+        </div>
+        <div class="principle-item">
+          <div class="principle-icon">🚫</div>
+          <div class="principle-text">
+            <strong>No epics, stories, or tasks — ever</strong>
+            <p>This board does not link to, reference, or replicate team-level Jira work. Those details belong in delivery tools, not here.</p>
+          </div>
+        </div>
+        <div class="principle-item">
+          <div class="principle-icon">📊</div>
+          <div class="principle-text">
+            <strong>Coarse indicators over exact numbers</strong>
+            <p>Directional progress labels avoid false precision. If an initiative is clearly early or clearly done, that is sufficient signal for leadership review.</p>
+          </div>
+        </div>
+        <div class="principle-item">
+          <div class="principle-icon">🧭</div>
+          <div class="principle-text">
+            <strong>OKR alignment is the anchor, not scope</strong>
+            <p>Each initiative must trace back to a named IT OKR theme. If it cannot, it does not belong on this board — it belongs in a project plan.</p>
+          </div>
+        </div>
+        <div class="principle-item">
+          <div class="principle-icon">⚡</div>
+          <div class="principle-text">
+            <strong>Low-friction maintenance is non-negotiable</strong>
+            <p>If the board costs more than 30 minutes per owner per biweek to maintain, the design is wrong. Simplicity is a feature.</p>
+          </div>
+        </div>
+        <div class="principle-item">
+          <div class="principle-icon">🔍</div>
+          <div class="principle-text">
+            <strong>At-risk items drive the conversation</strong>
+            <p>Leadership review is exception-based: 🟡 At Risk and 🔴 Off Track cards get airtime. Green status requires no meeting discussion by default.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /body -->
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <p>IT Program Management Office &nbsp;|&nbsp; <strong>PMO Strategic Tracker — Design Approach</strong></p>
+    <p>For leadership review and PMO internal use &nbsp;|&nbsp; Updated May 2026</p>
+  </div>
+
+</div><!-- /page -->
+</body>
+</html>
